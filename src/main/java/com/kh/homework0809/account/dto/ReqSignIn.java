@@ -6,4 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReqSignIn {
+    private String id;
+    private String pw;
 }

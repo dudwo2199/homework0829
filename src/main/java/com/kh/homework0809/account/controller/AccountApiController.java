@@ -2,6 +2,7 @@ package com.kh.homework0809.account.controller;
 
 import com.kh.homework0809.account.dto.*;
 import com.kh.homework0809.account.service.AccountService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,27 +15,36 @@ public class AccountApiController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<RespSignUp> signUp(@RequestBody ReqSignUp dto) {
-
-
-        return ResponseEntity.ok(null);
+        RespSignUp result = service.signUp(dto);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<RespSignIn> signIn(@RequestBody ReqSignIn dto) {
+    public ResponseEntity<RespSignIn> signIn(@RequestBody ReqSignIn dto, HttpSession session) {
+        var result = service.signIn(dto);
+        session.setAttribute("ACCOUNT", result);
 
-
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/sign-out")
-    public ResponseEntity<RespSignOut> signOut(@RequestBody ReqSignOut dto) {
+    @DeleteMapping
+    public ResponseEntity<RespDeleteAccount> deleteAccount(@RequestBody ReqDeleteAccount dto, HttpSession session) {
+        var auth = (RespSignIn) session.getAttribute("ACCOUNT");
 
-        return ResponseEntity.ok(null);
+        dto.setTargetNo(auth.getData().getNo());
+        var result = service.delete(dto);
+
+        session.invalidate();
+
+        return ResponseEntity.ok(result);
     }
 
-    @DeleteMapping("/{no}")
-    public ResponseEntity<Void> deleteAccount(@PathVariable int no) {
+    @PutMapping
+    public ResponseEntity<RespModifyPassWord> updateAccount(@RequestBody ReqModifyPassword dto, HttpSession session) {
+        var auth = (RespSignIn) session.getAttribute("ACCOUNT");
+        dto.setTargetNo(auth.getData().getNo());
+        var result = service.modify(dto);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(result);
     }
 }

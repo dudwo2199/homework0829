@@ -5,5 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RespSignOut {
+public class ReqDeleteAccount {
+    private int targetNo;
+    private String pw;
 }
