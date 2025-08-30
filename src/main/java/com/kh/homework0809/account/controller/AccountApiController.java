@@ -40,7 +40,7 @@ public class AccountApiController {
     }
 
     @PutMapping
-    public ResponseEntity<RespModifyPassWord> updateAccount(@RequestBody ReqModifyPassword dto, HttpSession session) {
+    public ResponseEntity<RespModifyPassWord> modifyAccount(@RequestBody ReqModifyPassword dto, HttpSession session) {
         var auth = (RespSignIn) session.getAttribute("ACCOUNT");
         dto.setTargetNo(auth.getData().getNo());
         var result = service.modify(dto);
