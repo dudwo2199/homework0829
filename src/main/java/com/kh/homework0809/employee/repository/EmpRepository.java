@@ -17,4 +17,8 @@ public class EmpRepository {
     public void registerEmp(EmpEntity entity) throws PersistenceException {
         em.persist(entity);
     }
+
+    public EmpEntity findByNo(int no) {
+        return em.find(EmpEntity.class, no);
+    }
 }

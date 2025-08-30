@@ -22,7 +22,7 @@ public class AccountService {
     public RespSignUp signUp(ReqSignUp dto) {
 
         if(repository.existsById(dto.getId())) {
-            throw new IllegalStateApiException(ErrorCode.DUPLICATE_ACCOUNT_ID);
+            throw new IllegalStateApiException(ErrorCode.DUPLICATE_ID);
         }
 
         var empEntity = EmpEntity.from(dto);
@@ -44,11 +44,16 @@ public class AccountService {
             throw new IllegalStateApiException(ErrorCode.INVALID_PASSWORD);
         }
 
+        if(accountEntity.getDeletedAt() != null) {
+            throw new IllegalStateApiException(ErrorCode.WITHDRAWN_ACCOUNT);
+        }
+
         return RespSignIn.from(accountEntity);
     }
 
     public RespDeleteAccount delete(ReqDeleteAccount dto) {
         var target = repository.findByNo(dto.getTargetNo());
+        var empTarget = empRepository.findByNo(dto.getTargetNo());
 
         if (!target.getPw().equals(dto.getPw())) {
             throw new IllegalStateApiException(ErrorCode.INVALID_PASSWORD);
@@ -56,8 +61,9 @@ public class AccountService {
 
         try {
             target.delete();
+            empTarget.delete();
         } catch (PersistenceException e) {
-            throw new IllegalStateApiException(ErrorCode.FAILED_TO_DELETE_ACCOUNT);
+            throw new IllegalStateApiException(ErrorCode.FAILED_DELETE_ACCOUNT);
         }
         return RespDeleteAccount.from(target);
     }
@@ -68,6 +74,7 @@ public class AccountService {
         if (!target.getPw().equals(dto.getOriginPw())) {
             throw new IllegalStateApiException(ErrorCode.INVALID_PASSWORD);
         }
+
         try {
             target.modifyPassword(dto.getNewPw());
         } catch (PersistenceException e) {

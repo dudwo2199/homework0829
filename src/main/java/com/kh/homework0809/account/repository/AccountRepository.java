@@ -1,6 +1,5 @@
 package com.kh.homework0809.account.repository;
 
-import com.kh.homework0809.account.dto.ReqSignIn;
 import com.kh.homework0809.account.entity.AccountEntity;
 import com.kh.homework0809.exception.ErrorCode;
 import com.kh.homework0809.exception.IllegalStateApiException;
@@ -30,7 +29,7 @@ public class AccountRepository {
                     .setParameter("id", id)
                     .getSingleResult();
         } catch (NoResultException e) {
-            throw new IllegalStateApiException(ErrorCode.NOT_FOUND_ACCOUNT);
+            throw new IllegalStateApiException(ErrorCode.NOT_FOUND);
         }
     }
 

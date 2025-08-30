@@ -20,7 +20,7 @@ public class ExceptionMonitor {
 
         Map<String, Object> map = new HashMap<>();
         map.put("timestamp", LocalDateTime.now());
-        map.put("code", "[" + e.getErrorCode().getDomain() + "]-" + e.getErrorCode().getStatusCode());
+        map.put("code", e.getErrorCode().getCode());
         map.put("message", e.getMessage());
 
         return ResponseEntity
