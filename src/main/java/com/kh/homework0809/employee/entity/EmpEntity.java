@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name ="EMPLOYEE")
 @Getter
-@ToString
 public class EmpEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
