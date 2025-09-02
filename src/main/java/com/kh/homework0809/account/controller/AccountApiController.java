@@ -17,7 +17,8 @@ public class AccountApiController {
     @PostMapping("/sign-up")
     public ResponseEntity<RespSignUp> signUp(@RequestBody ReqSignUp dto) {
         RespSignUp result = service.signUp(dto);
-        return ResponseEntity.ok(result);
+        return ResponseEntity
+                .ok(result);
     }
 
     @PostMapping("/sign-in")
@@ -30,7 +31,8 @@ public class AccountApiController {
 
         session.setAttribute("Authenticator", auth);
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity
+                .ok(result);
     }
 
     @DeleteMapping
@@ -42,15 +44,27 @@ public class AccountApiController {
 
         session.invalidate();
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity
+                .ok(result);
     }
 
     @PutMapping
     public ResponseEntity<RespModifyPassWord> modifyAccount(@RequestBody ReqModifyPassword dto, HttpSession session) {
-        var auth = (RespSignIn) session.getAttribute("ACCOUNT");
-        dto.setTargetNo(auth.getData().getNo());
+        var auth = (Authenticator) session.getAttribute("Authenticator");
+        dto.setTargetNo(auth.getNo());
         var result = service.modify(dto);
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity
+                .ok(result);
+    }
+
+    @PostMapping("/sign-out")
+    public ResponseEntity<RespSignOut> signOut(HttpSession session) {
+        session.invalidate();
+        var result = RespSignOut.builder()
+                .msg("로그아웃 되었습니다.")
+                .build();
+        return ResponseEntity
+                .ok(result);
     }
 }

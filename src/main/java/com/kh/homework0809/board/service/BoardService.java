@@ -59,8 +59,15 @@ public class BoardService {
         return RespBoard.from(result);
     }
 
-    public RespModifyBoard modifyBoard(ReqModifyBoard dto) {
+    public RespModifyBoard modifyBoard(ReqModifyBoard dto, Authenticator auth) {
         var entity = repository.lookAt(dto.getTargetNo());
+
+        if(entity.getWriter().getEno() != auth.getNo()){
+            return RespModifyBoard.builder()
+                    .msg("본인이 작성한 글만 수정할 수 있습니다.")
+                    .data(null)
+                    .build();
+        }
 
         if (entity == null) {
             return RespModifyBoard.builder()

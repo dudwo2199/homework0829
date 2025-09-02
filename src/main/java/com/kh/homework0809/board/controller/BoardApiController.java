@@ -66,8 +66,11 @@ public class BoardApiController {
     }
 
     @PutMapping
-    public ResponseEntity<RespModifyBoard> modifyBoard(@RequestBody ReqModifyBoard dto) {
-        var result = service.modifyBoard(dto);
+    public ResponseEntity<RespModifyBoard> modifyBoard(@RequestBody ReqModifyBoard dto, HttpSession session) {
+        System.out.println("dto = " + dto);
+        var auth = (Authenticator) session.getAttribute("Authenticator");
+
+        var result = service.modifyBoard(dto, auth);
 
         return ResponseEntity
                 .ok(result);
